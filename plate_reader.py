@@ -19,7 +19,8 @@ parser.add_argument(
 	'-o', '--output',
 	help = 'The output filename. If it is a folder, or the output not given, the new table will be saved with the same filename as the original file.',
 	action = 'store',
-	dest = 'output'
+	dest = 'output',
+	default = None
 )
 
 
@@ -84,6 +85,11 @@ def parse_plate_reader(filename: Union[str, Path], output_filename: Path = None)
 
 
 if __name__ == "__main__":
+
 	args = parser.parse_args()
-	path = Path.home() / "Downloads" / "growth curve 2.txt"
-	parse_plate_reader(args.filename, args.output)
+	path = args.filename
+	output_filename = args.output
+	if path is None:
+		path = Path.home() / "Downloads" / "growth curve 4.txt"
+		output_filename = None
+	parse_plate_reader(path, output_filename)
