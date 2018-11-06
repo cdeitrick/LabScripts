@@ -29,6 +29,8 @@ def combine_sequence_runs(folder_a:Path, folder_b:Path, output_folder:Path):
 		rsubpath = itertools.takewhile(lambda s: s not in [folder_a.name, folder_b.name], path_a.parts[::-1])
 		new_path = output_folder.joinpath(*list(rsubpath)[::-1])
 		print(new_path)
+		print("\t", path_a)
+		print("\t", path_b)
 
 if __name__ == "__main__":
 	dmux_folder = Path("/home/dmux")
