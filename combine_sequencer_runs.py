@@ -1,6 +1,7 @@
 from pathlib import Path
 import subprocess
 import itertools
+import os
 def concatenate_files(left:Path, right:Path, output:Path):
 	command = ["cat", left, right]
 	process = subprocess.run(command, stdout = subprocess.PIPE)
@@ -26,6 +27,8 @@ def combine_sequence_runs(folder_a:Path, folder_b:Path, output_folder:Path):
 		path_a, path_b = paths
 		rsubpath = itertools.takewhile(lambda s: s not in [folder_a.name, folder_b.name], path_a.parts[::-1])
 		new_path = output_folder.joinpath(*list(rsubpath)[::-1])
+		if not new_path.parent.exists():
+			os.makedirs(new_path.parent)
 		print(new_path)
 		print("\t", path_a)
 		print("\t", path_b)
