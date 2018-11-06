@@ -130,7 +130,7 @@ class SequenceScraper:
 		writer.close()
 
 	def generate_combined_sample_sheet(self) -> pandas.DataFrame:
-		pattern = "*/SampleSheet.csv"
+		pattern = "**/SampleSheet.csv"
 		#pattern = "**/SampleSheet.csv"
 		columns = {
 			'I5_Index_ID': 'i5IndexId',
