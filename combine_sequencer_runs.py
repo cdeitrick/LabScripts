@@ -31,7 +31,7 @@ def combine_sequence_runs(folder_a:Path, folder_b:Path, output_folder:Path):
 		print(new_path)
 
 if __name__ == "__main__":
-	dmux_folder = Path.home() / "dmux"
+	dmux_folder = Path("/home/dmux")
 	_folder_a = dmux_folder / "181018"
 	_folder_b = dmux_folder / "181020"
 	_output_folder = dmux_folder / "181018B"
