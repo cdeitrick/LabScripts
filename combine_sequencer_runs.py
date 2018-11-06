@@ -19,7 +19,7 @@ def combine_sequence_runs(folder_a:Path, folder_b:Path, output_folder:Path):
 			file_map[name] = [filename]
 
 	assert all(len(v)==2 for v in file_map.values())
-
+	print(f"Found {len(file_map)} files.")
 	for name, paths in file_map.items():
 		path_a, path_b = paths
 		rsubpath = itertools.takewhile(lambda s: s not in [folder_a.name, folder_b.name], path_a.parts[::-1])
