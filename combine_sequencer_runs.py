@@ -3,8 +3,8 @@ import subprocess
 import itertools
 def concatenate_files(left:Path, right:Path, output:Path):
 	command = ["cat", left, right, '>', output]
-	subprocess.run(command)
-
+	process = subprocess.run(command, stdout = subprocess.PIPE)
+	output.write_bytes(process.stdout)
 def combine_sequence_runs(folder_a:Path, folder_b:Path, output_folder:Path):
 	files_a = list(folder_a.glob("**/*.gz"))
 	print(f"Found {len(files_a)} in {folder_a}")
