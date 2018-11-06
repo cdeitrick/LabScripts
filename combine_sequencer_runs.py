@@ -3,11 +3,9 @@ import subprocess
 import itertools
 def concatenate_files(left:Path, right:Path, output:Path):
 	command = f"cat {left} {right} > {output}"
-	print(command)
+	subprocess.call(command)
 
 def combine_sequence_runs(folder_a:Path, folder_b:Path, output_folder:Path):
-	print(folder_a.exists(), folder_a)
-	print(folder_b.exists(), folder_b)
 	files_a = list(folder_a.glob("**/*.gz"))
 	print(f"Found {len(files_a)} in {folder_a}")
 	files_b = list(folder_b.glob("**/*.gz"))
@@ -31,6 +29,7 @@ def combine_sequence_runs(folder_a:Path, folder_b:Path, output_folder:Path):
 		print(new_path)
 		print("\t", path_a)
 		print("\t", path_b)
+		concatenate_files(path_a, path_b, new_path)
 
 if __name__ == "__main__":
 	dmux_folder = Path("/home/dmux")
