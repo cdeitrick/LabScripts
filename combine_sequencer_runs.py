@@ -36,4 +36,6 @@ if __name__ == "__main__":
 	_folder_a = dmux_folder / "181018"
 	_folder_b = dmux_folder / "181020"
 	_output_folder = dmux_folder / "181018B"
+	if not _output_folder.exists():
+		_output_folder.mkdir()
 	combine_sequence_runs(_folder_a, _folder_b, _output_folder)
