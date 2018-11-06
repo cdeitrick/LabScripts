@@ -6,9 +6,13 @@ def concatenate_files(left:Path, right:Path, output:Path):
 	print(command)
 
 def combine_sequence_runs(folder_a:Path, folder_b:Path, output_folder:Path):
-	files_a = folder_a.glob("**/*.gz")
-	files_b = folder_b.glob("**/*.gz")
-	files = list(files_a) + list(files_b)
+	print(folder_a.exists(), folder_a)
+	print(folder_b.exists(), folder_b)
+	files_a = list(folder_a.glob("**/*.gz"))
+	print(f"Found {len(files_a)} in {folder_a}")
+	files_b = list(folder_b.glob("**/*.gz"))
+	print(f"Found {len(files_b)} in {folder_b}")
+	files = files_a + files_b
 
 	file_map = dict()
 	for filename in files:
