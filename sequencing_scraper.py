@@ -44,11 +44,12 @@ def extract_date_from_sample_id(sample_id:str)->datetime.date:
 
 	return datetime.date(year = year, month = month, day = day)
 
-def search_for_sample_sheets(folder:Path)->List[Path]:
+def search_for_sample_sheets(folder:Path, index = 0)->List[Path]:
 	sample_sheets = list()
+	if index > 3: return sample_sheets
 	for path in folder.iterdir():
 		if path.is_dir():
-			sample_sheets += search_for_sample_sheets(path)
+			sample_sheets += search_for_sample_sheets(path, index + 1)
 		elif path.suffix == '.csv':
 			sample_sheets.append(path)
 	return sample_sheets
