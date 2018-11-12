@@ -55,7 +55,7 @@ def search_for_sample_sheets(folder:Path, index = 0)->List[Path]:
 	for path in folder.iterdir():
 		if path.is_dir():
 			sample_sheets += search_for_sample_sheets(path, index + 1)
-		elif path.suffix == '.csv':
+		elif path.name == 'SampleSheet.csv':
 			sample_sheets.append(path)
 	return sample_sheets
 
