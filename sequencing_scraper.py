@@ -42,7 +42,7 @@ def extract_date_from_sample_id(sample_id:str)->datetime.date:
 	month = int(string[:2])
 	day = int(string[2:4])
 	year = 2000+int(string[4:])
-
+	print((year, month, day))
 	return datetime.date(year = year, month = month, day = day)
 
 def search_for_sample_sheets(folder:Path, index = 0)->List[Path]:
