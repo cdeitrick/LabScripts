@@ -39,11 +39,12 @@ def extract_date(path:Path)->datetime.date:
 def extract_date_from_sample_id(sample_id:str)->datetime.date:
 	if not isinstance(sample_id, str): return None
 	string = sample_id.split('_')[0]
-	month = int(string[:2])
-	day = int(string[2:4])
-	year = 2000+int(string[4:])
-	print((year, month, day))
+
+
 	try:
+		month = int(string[:2])
+		day = int(string[2:4])
+		year = 2000 + int(string[4:])
 		result = datetime.date(year = year, month = month, day = day)
 	except ValueError:
 		result = None
