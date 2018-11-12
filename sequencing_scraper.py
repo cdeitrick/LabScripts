@@ -37,6 +37,7 @@ def extract_date(path:Path)->datetime.date:
 			return result
 
 def extract_date_from_sample_id(sample_id:str)->datetime.date:
+	if not isinstance(sample_id, str): return None
 	string = sample_id.split('_')[0]
 	month = int(string[:2])
 	day = int(string[2:4])
