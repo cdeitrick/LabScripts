@@ -27,7 +27,6 @@ def groupby(iterable: Iterable, by: Callable):
 	return groups
 
 def extract_date(path:Path)->datetime.date:
-	print(path)
 	for part in path.parts[::-1]:
 		match = part.isdigit()
 		if match:
@@ -36,6 +35,15 @@ def extract_date(path:Path)->datetime.date:
 			day = part[:2]
 			result = datetime.date(year = int(year), month = int(month), day = int(day))
 			return result
+
+def extract_date_from_sample_id(sample_id:str)->datetime.date:
+	string = sample_id.split('_')[0]
+	month = int(string[:2])
+	day = int(string[2:4])
+	year = 2000+int(string[4:])
+
+	return datetime.date(year = year, month = month, day = day)
+
 class SequenceScraper:
 	def __init__(self, config_path: Path, dmux_path: Path):
 		"""
@@ -171,6 +179,7 @@ class SequenceScraper:
 			billing_table.append(table)
 
 		billing_table = pandas.concat(billing_table)
+		billing_table['date'] = billing_table['sampleId'].apply(extract_date_from_sample_id)
 		print("Found {} samples".format(len(billing_table)))
 		#billing_table = billing_table.drop_duplicates(subset = 'sampleId', keep = 'first')
 		billing_table = billing_table.drop_duplicates()
