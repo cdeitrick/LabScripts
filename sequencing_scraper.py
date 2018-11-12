@@ -44,6 +44,15 @@ def extract_date_from_sample_id(sample_id:str)->datetime.date:
 
 	return datetime.date(year = year, month = month, day = day)
 
+def search_for_sample_sheets(folder:Path)->List[Path]:
+	sample_sheets = list()
+	for path in folder.iterdir():
+		if path.is_dir():
+			sample_sheets += search_for_sample_sheets(path)
+		elif path.suffix == '.csv':
+			sample_sheets.append(path)
+	return sample_sheets
+
 class SequenceScraper:
 	def __init__(self, config_path: Path, dmux_path: Path):
 		"""
@@ -158,9 +167,11 @@ class SequenceScraper:
 			'index2':      'index2'
 		}
 		print("Searching for all sample sheets...")
-		config_sample_sheets = list(self.config_path.glob(pattern))
+		#config_sample_sheets = list(self.config_path.glob(pattern))
+		config_sample_sheets = search_for_sample_sheets(self.config_path)
 		print("Found {} sample sheets in config_folder.".format(len(config_sample_sheets)))
-		dmux_sample_sheets = list(self.dmux_path.glob(pattern))
+		#dmux_sample_sheets = list(self.dmux_path.glob(pattern))
+		dmux_sample_sheets = search_for_sample_sheets(self.dmux_path)
 		print("Found {} sample sheets in dmux folder.".format(len(dmux_sample_sheets)))
 		all_sample_sheets = config_sample_sheets + dmux_sample_sheets
 		print("Found {} total.".format(len(all_sample_sheets)))
