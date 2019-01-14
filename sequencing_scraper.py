@@ -154,7 +154,6 @@ class SequenceScraper:
 
 	def generate_combined_sample_sheet(self) -> pandas.DataFrame:
 		pattern = "**/SampleSheet.csv"
-		#pattern = "**/SampleSheet.csv"
 		columns = {
 			'I5_Index_ID': 'i5IndexId',
 			'I7_Index_ID': 'i7IndexId',
@@ -201,7 +200,8 @@ class SequenceScraper:
 		#billing_table = billing_table.drop_duplicates(subset = 'sampleId', keep = 'first')
 		billing_table = billing_table.drop_duplicates()
 		print("Found {} samples after removing duplicate sampleIds.".format(len(billing_table)))
-		output = Path(__file__).with_name("combined_sample_sheet.tsv")
+		current_date = datetime.datetime.now().date().isoformat()
+		output = Path(__file__).with_name(f"combined_sample_sheet.{current_date}.tsv")
 		billing_table.to_csv(str(output), sep = "\t")
 
 		return billing_table
