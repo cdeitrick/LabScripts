@@ -71,11 +71,11 @@ class SequenceScraper:
 		"""
 		self.config_path = config_path
 		self.dmux_path = dmux_path
-
+		self.current_date = datetime.datetime.now().date().isoformat()
 		self.sample_sheets = self.generate_combined_sample_sheet()
 		sample_map = self.collect_sample_files()
 		self.match_files_to_project(self.sample_sheets, sample_map)
-		self.to_excel(Path(__file__).with_name('billing.xlsx'))
+		self.to_excel(Path(__file__).with_name(f'billing.{self.current_date}.xlsx'))
 
 	def collect_sample_files(self) -> Dict[str, List[Path]]:
 		filenames = list()
@@ -200,8 +200,8 @@ class SequenceScraper:
 		#billing_table = billing_table.drop_duplicates(subset = 'sampleId', keep = 'first')
 		billing_table = billing_table.drop_duplicates()
 		print("Found {} samples after removing duplicate sampleIds.".format(len(billing_table)))
-		current_date = datetime.datetime.now().date().isoformat()
-		output = Path(__file__).with_name(f"combined_sample_sheet.{current_date}.tsv")
+
+		output = Path(__file__).with_name(f"combined_sample_sheet.{self.current_date}.tsv")
 		billing_table.to_csv(str(output), sep = "\t")
 
 		return billing_table
