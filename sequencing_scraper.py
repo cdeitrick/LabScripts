@@ -109,6 +109,9 @@ def combine_sample_sheets(filenames: List[Path]) -> pandas.DataFrame:
 			# Consume the rest of the `reader` object.
 			sample_sheet += list(reader)
 	df = pandas.DataFrame(sample_sheet)
+	logger.debug(f"df.columns")
+	if len(df.columns) > len(fieldnames):
+		df.to_csv('test.csv')
 	df.columns = [COLUMNMAP[i] for i in df.columns]
 	return df
 
@@ -283,7 +286,8 @@ class SequenceScraper:
 
 
 if __name__ == "__main__":
-	config_path = Path("/home/data/raw")
-	dmux_folder = Path("/home/data/dmux")
-	table = generate_combined_sample_sheet(dmux_folder, config_path)
+	#config_path = Path("/home/data/raw")
+	#dmux_folder = Path("/home/data/dmux")
+	#table = generate_combined_sample_sheet(dmux_folder, config_path)
+	generate_combined_sample_sheet(Path(__file__).parent)
 
