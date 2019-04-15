@@ -124,9 +124,10 @@ def generate_combined_sample_sheet(*paths) -> pandas.DataFrame:
 
 	folder = Path(__file__).with_name('ss')
 	folder.mkdir()
-	for index, i in enumerate(sample_sheets):
+	for index, source in enumerate(sample_sheets):
 		destination = folder / f"{index}.SampleSheet.csv"
-		destination.write_text(i.read_text())
+		logger.debug(f"{source} -> {destination}")
+		destination.write_text(source.read_text())
 
 	logger.info("Combining all sample sheets...")
 	sample_sheet = combine_sample_sheets(sample_sheets)
