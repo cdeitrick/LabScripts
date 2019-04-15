@@ -293,8 +293,8 @@ class SequenceScraper:
 
 
 if __name__ == "__main__":
-	#config_path = Path("/home/data/raw")
-	#dmux_folder = Path("/home/data/dmux")
-	#table = generate_combined_sample_sheet(dmux_folder, config_path)
-	generate_combined_sample_sheet(Path(__file__).parent)
+	config_path = Path("/home/data/raw")
+	dmux_folder = Path("/home/data/dmux")
+	table = generate_combined_sample_sheet(dmux_folder, config_path)
+	#generate_combined_sample_sheet(Path(__file__).parent)
 
