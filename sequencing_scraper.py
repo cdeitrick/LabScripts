@@ -100,13 +100,14 @@ def combine_sample_sheets(filenames: List[Path]) -> pandas.DataFrame:
 	fieldnames = ['Sample ID', 'Sample_Name', 'Species', 'Project', 'NucleicAcid', 'Sample_Well', 'I7_Index_ID', 'index', 'I5_Index_ID', 'index2']
 	sample_sheet = list()
 	for filename in filenames:
-		reader = csv.DictReader(filename, fieldnames = fieldnames)
-		for line in reader:
-			# Find the header line, then break. The rest of the `reader` object should be the samples.
-			if line['Sample_ID'] == 'Sample_ID':
-				break
-		# Consume the rest of the `reader` object.
-		sample_sheet += list(reader)
+		with filename.open() as file1:
+			reader = csv.DictReader(file1, fieldnames = fieldnames)
+			for line in reader:
+				# Find the header line, then break. The rest of the `reader` object should be the samples.
+				if line['Sample_ID'] == 'Sample_ID':
+					break
+			# Consume the rest of the `reader` object.
+			sample_sheet += list(reader)
 	df = pandas.DataFrame(sample_sheet)
 	df.columns = [COLUMNMAP[i] for i in df.columns]
 	return df
