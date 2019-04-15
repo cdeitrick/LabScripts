@@ -123,7 +123,7 @@ def generate_combined_sample_sheet(*paths) -> pandas.DataFrame:
 	sample_sheets = find_all_sample_sheets(*paths)
 
 	folder = Path(__file__).with_name('ss')
-	folder.mkdir()
+	if not folder.exists(): folder.mkdir()
 	for index, source in enumerate(sample_sheets):
 		destination = folder / f"{index}.SampleSheet.csv"
 		logger.debug(f"{source} -> {destination}")
