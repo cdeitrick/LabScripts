@@ -2,7 +2,7 @@ import csv
 import datetime
 from pathlib import Path
 from typing import Callable, Dict, Iterable, List
-
+import itertools
 import pandas
 from loguru import logger
 
@@ -89,7 +89,7 @@ def find_all_sample_sheets(*paths) -> List[Path]:
 	""" Finds all sample sheets within the given folders. """
 	sample_sheets = list()
 	for path in paths:
-		files = list(path.glob('**/SampleSheet.csv'))
+		files = list(path.glob('**/*SampleSheet.csv'))
 		logger.info(f"Found {len(files)} samplesheets in folder {path}")
 		sample_sheets += files
 	return sample_sheets
@@ -98,7 +98,7 @@ def find_all_sample_sheets(*paths) -> List[Path]:
 def combine_sample_sheets(filenames: List[Path]) -> pandas.DataFrame:
 	""" Combines the individual samplesheets into a single DataFrame."""
 	fieldnames = ['Sample_ID', 'Sample_Name', 'Species', 'Project', 'NucleicAcid', 'Sample_Well', 'I7_Index_ID', 'index', 'I5_Index_ID', 'index2']
-	sample_sheet = list()
+	sample_sheets = list()
 	for filename in filenames:
 		with filename.open() as file1:
 			reader = csv.DictReader(file1, fieldnames = fieldnames)
@@ -107,8 +107,12 @@ def combine_sample_sheets(filenames: List[Path]) -> pandas.DataFrame:
 				if line['Sample_ID'] == 'Sample_ID':
 					break
 			# Consume the rest of the `reader` object.
-			sample_sheet += list(reader)
-	df = pandas.DataFrame(sample_sheet)
+			sample_sheets += list(reader)
+
+	df = pandas.DataFrame(sample_sheets)
+	if None in df.columns:
+		# This happens when there are extra columns in the samplesheet.
+		df.pop(None)
 	logger.debug(f"{df.columns}")
 	if len(df.columns) > len(fieldnames):
 		df.to_csv('test.csv')
@@ -121,13 +125,6 @@ def generate_combined_sample_sheet(*paths) -> pandas.DataFrame:
 
 	logger.info("Searching for all sample sheets...")
 	sample_sheets = find_all_sample_sheets(*paths)
-
-	folder = Path(__file__).with_name('ss')
-	if not folder.exists(): folder.mkdir()
-	for index, source in enumerate(sample_sheets):
-		destination = folder / f"{index}.SampleSheet.csv"
-		logger.debug(f"{source} -> {destination}")
-		destination.write_text(source.read_text())
 
 	logger.info("Combining all sample sheets...")
 	sample_sheet = combine_sample_sheets(sample_sheets)
@@ -290,11 +287,20 @@ class SequenceScraper:
 		billing_table.to_csv(str(output), sep = "\t")
 
 		return billing_table
+def collect_sample_files(folder:Path) -> Dict[str, List[Path]]:
+	filenames = list()
 
+	for filename in folder.glob("**/*"):
+		if filename.suffix != '.gz': continue
+		if not filename.is_file(): continue
+		filenames.append(filename)
+
+	sample_map = groupby(filenames, get_sample_id)
+	return sample_map
 
 if __name__ == "__main__":
-	config_path = Path("/home/data/raw")
-	dmux_folder = Path("/home/data/dmux")
-	table = generate_combined_sample_sheet(dmux_folder, config_path)
-	#generate_combined_sample_sheet(Path(__file__).parent)
+	#config_path = Path("/home/data/raw")
+	#dmux_folder = Path("/home/data/dmux")
+	#table = generate_combined_sample_sheet(dmux_folder, config_path)
+	generate_combined_sample_sheet(Path(__file__).parent / "ss")
 
