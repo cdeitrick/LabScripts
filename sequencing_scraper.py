@@ -109,7 +109,7 @@ def combine_sample_sheets(filenames: List[Path]) -> pandas.DataFrame:
 			# Consume the rest of the `reader` object.
 			sample_sheet += list(reader)
 	df = pandas.DataFrame(sample_sheet)
-	logger.debug(f"df.columns")
+	logger.debug(f"{df.columns}")
 	if len(df.columns) > len(fieldnames):
 		df.to_csv('test.csv')
 	df.columns = [COLUMNMAP[i] for i in df.columns]
@@ -121,6 +121,12 @@ def generate_combined_sample_sheet(*paths) -> pandas.DataFrame:
 
 	logger.info("Searching for all sample sheets...")
 	sample_sheets = find_all_sample_sheets(*paths)
+
+	folder = Path(__file__).with_name('ss')
+	folder.mkdir()
+	for index, i in enumerate(sample_sheets):
+		destination = folder / f"{index}.SampleSheet.csv"
+		destination.write_text(i.read_text())
 
 	logger.info("Combining all sample sheets...")
 	sample_sheet = combine_sample_sheets(sample_sheets)
