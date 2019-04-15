@@ -97,7 +97,7 @@ def find_all_sample_sheets(*paths) -> List[Path]:
 
 def combine_sample_sheets(filenames: List[Path]) -> pandas.DataFrame:
 	""" Combines the individual samplesheets into a single DataFrame."""
-	fieldnames = ['Sample ID', 'Sample_Name', 'Species', 'Project', 'NucleicAcid', 'Sample_Well', 'I7_Index_ID', 'index', 'I5_Index_ID', 'index2']
+	fieldnames = ['Sample_ID', 'Sample_Name', 'Species', 'Project', 'NucleicAcid', 'Sample_Well', 'I7_Index_ID', 'index', 'I5_Index_ID', 'index2']
 	sample_sheet = list()
 	for filename in filenames:
 		with filename.open() as file1:
