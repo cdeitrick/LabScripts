@@ -1,20 +1,30 @@
-import pandas
-from pathlib import Path
 import argparse
-def open_table(filename:Path, sheetname: str)->pandas.DataFrame:
+from pathlib import Path
+
+import pandas
+
+
+def open_table(filename: Path, sheetname: str) -> pandas.DataFrame:
 	if filename.suffix in ['.xlsx', 'xls']:
 		table = pandas.read_excel(filename, sheet_name = sheetname)
 	else:
 		table = pandas.read_csv(filename)
 	return table
 
-def merge_tables(left_filename:Path, right_filename:Path, left_sheet:str, right_sheet:str, on:str):
+
+def merge_tables(left_filename: Path, right_filename: Path, left_sheet: str, right_sheet: str, on: str)->pandas.DataFrame:
 	left_table = open_table(left_filename, left_sheet)
 	right_table = open_table(right_filename, right_sheet)
 
-	merged_table = left_table.merge(right_table, on = on)
-
+	if left_sheet != right_sheet:
+		suffixes = ("_" + left_sheet, "_" + right_sheet)
+	elif left_filename.name != right_filename.name:
+		suffixes = ("_" + left_filename.name, "_" + right_filename.name)
+	else:
+		suffixes = ("_x", "_y")
+	merged_table = left_table.merge(right_table, on = on, suffixes = suffixes)
 	return merged_table
+
 
 def create_parser(parameters = None):
 	parser = argparse.ArgumentParser()
@@ -64,6 +74,7 @@ def create_parser(parameters = None):
 
 	return parsed_args
 
+
 if __name__ == "__main__":
 	debug_args = ["-l", "/home/cld100/Downloads/RNA seq wrt WT(p_0.05).xlsx", "--right-sheetname", "A106P", "--column", "Gene_symbol"]
 	args = create_parser(debug_args)
@@ -72,5 +83,7 @@ if __name__ == "__main__":
 	print(args)
 	merged_table = merge_tables(args.left_filename, args.right_filename, args.left_sheet, args.right_sheet, args.column)
 
-	print(merged_table.to_string())
-
+	if args.output.suffix == '.xlsx':
+		merged_table.to_excel(args.output)
+	else:
+		merged_table.to_csv(args.output)
